@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: medicare_part_d   # in dbt-databricks, "database" means catalog
+    schema: bronze
+    tables:
+      - name: prescriber_drug
+        description: >
+          Raw CMS Medicare Part D Prescribers by Provider and Drug file, data year 2024,
+          loaded as-is with every column kept as a string. One row per NPI, brand and
+          generic name. Provider-drug pairs with fewer than 11 claims are excluded by CMS.
+        columns:
+          - name: Prscrbr_NPI
+            data_tests:
+              - not_null
+          - name: Brnd_Name
+            data_tests:
+              - not_null
+          - name: Gnrc_Name
+            data_tests:
+              - not_null
+          - name: Tot_Clms
+            data_tests:
+              - not_null
+
+      - name: national_totals_by_year
+        description: >
+          CMS national Part D totals by calendar year, 2013 to 2024. Used as the
+          benchmark for reconciling the detail file.
+
+      - name: drug_class_flags
+        description: >
+          CMS list of drugs flagged as opioid, long-acting opioid, antibiotic or
+          antipsychotic.
+        columns:
+          - name: drug_name
+            data_tests:
+              - not_null

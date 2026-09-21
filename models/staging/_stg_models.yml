@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_part_d__prescriber_drug
+    description: >
+      Cleaned Part D prescriber-by-drug detail, one row per NPI, brand, generic and year.
+      Suppressed values are null, with flags marking them.
+    columns:
+      - name: prescriber_drug_key
+        data_tests:
+          - unique
+          - not_null
+      - name: prescriber_npi
+        data_tests:
+          - not_null
+      - name: total_claims
+        data_tests:
+          - not_null
+      - name: ge65_suppression_flag
+        data_tests:
+          - accepted_values:
+              values: ['#', '*']
