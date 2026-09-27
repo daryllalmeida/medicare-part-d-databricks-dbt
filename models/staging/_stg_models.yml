@@ -20,3 +20,27 @@ models:
         data_tests:
           - accepted_values:
               values: ['#', '*']
+
+  - name: stg_part_d__drug_class_flags
+    description: >
+      Drug-level opioid, antibiotic and antipsychotic classification flags from CMS,
+      cleaned to booleans and uppercased names for joining against prescriber-drug data.
+    columns:
+      - name: drug_name
+        data_tests:
+          - not_null
+      - name: generic_name
+        data_tests:
+          - not_null
+  - name: stg_part_d__national_totals_by_year
+    description: >
+      CMS national Medicare Part D totals by calendar year, 2013 to 2024. Used as the
+      benchmark to measure how much of the detail file's totals survive CMS suppression.
+    columns:
+      - name: calendar_year
+        data_tests:
+          - unique
+          - not_null
+      - name: total_claims
+        data_tests:
+          - not_null
