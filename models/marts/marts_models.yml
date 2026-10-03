@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_drug
+    description: >
+      One row per unique brand and generic name appearing in the 2024 claims data,
+      with opioid, antibiotic and antipsychotic classification flags. Drugs with no
+      match in the CMS flag list are marked false.
+    columns:
+      - name: drug_key
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_prescriber
+    description: >
+      One row per prescriber NPI appearing in the 2024 detail file, with name,
+      location and specialty. Organizations have no first name.
+    columns:
+      - name: prescriber_npi
+        data_tests:
+          - unique
+          - not_null
+
+  - name: fct_prescriber_drug_year
+    description: >
+      One row per prescriber, drug and year from the 2024 CMS Part D detail file.
+      Holds keys and measures only; descriptive attributes live in dim_drug and
+      dim_prescriber. Suppressed values are null, with flags marking them.
+    columns:
+      - name: prescriber_drug_key
+        data_tests:
+          - unique
+          - not_null
+      - name: prescriber_npi
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_prescriber')
+              field: prescriber_npi
+      - name: drug_key
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_drug')
+              field: drug_key
+      - name: total_claims
+        data_tests:
+          - not_null
