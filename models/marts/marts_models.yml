@@ -47,3 +47,17 @@ models:
       - name: total_claims
         data_tests:
           - not_null
+
+  - name: mart_reconciliation_coverage
+    description: >
+      Compares detail-file totals against official CMS national totals, by year.
+      Only 2024 has detail data loaded; other years show official totals with
+      null coverage, since no detail file was loaded for them.
+    columns:
+      - name: calendar_year
+        data_tests:
+          - unique
+          - not_null
+      - name: official_claims
+        data_tests:
+          - not_null
